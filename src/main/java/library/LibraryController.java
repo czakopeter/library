@@ -27,7 +27,7 @@ public class LibraryController {
     private BookRepository bookRepository;
     private MembershipCardRepository membershipCardRepository;
     private RentRepository rentRepository;
-    private Map<String, String> menu;
+    private Map<String, MenuItem> menu;
 
     public static void main(String[] args) {
         new LibraryController().run();
@@ -39,75 +39,71 @@ public class LibraryController {
         while (run) {
             showMenu();
             String command = reader.getString("Command: ");
-            commandProcess(command);
-        }
-    }
-
-    private void commandProcess(String command) {
-        switch (command) {
-            case "0":
-                exit();
-                break;
-            case "1":
-                Publisher publisher = publisherRepository.save(getPublisherFromUser());
-                System.out.println("ADDED PUBLISHER");
-                System.out.println(publisher);
-                break;
-            case "2":
-                List<Publisher> publishers = publisherRepository.findAll();
-                System.out.println("ALL PUBLISHER");
-                publishers.forEach(System.out::println);
-                break;
-            case "3":
-                BookForView book = bookRepository.save(getBookFromUser());
-                System.out.println("ADDED BOOK");
-                System.out.println(book);
-                break;
-            case "4":
-                List<BookForView> books = bookRepository.findAll();
-                System.out.println("ALL BOOKS");
-                books.forEach(System.out::println);
-                break;
-            case "5":
-                int publisherId = reader.getInt("Publisher id: ", "Can not parse integer");
-                List<String> titles = bookRepository.findBookTitlesByPublisherId(publisherId);
-                System.out.println("TITLE OF BOOKS OF PUBLISHER WITH ID: " + publisherId);
-                titles.forEach(System.out::println);
-                break;
-            case "6":
-                MembershipCard card = membershipCardRepository.save(getCardFromUser());
-                System.out.println("ADDED MEMBERSHIP CARD");
-                System.out.println(card);
-                break;
-            case "7":
-                List<MembershipCard> cards = membershipCardRepository.findAll();
-                System.out.println("ALL MEMBERSHIP CARD");
-                cards.forEach(System.out::println);
-                break;
-            case "8":
-                RentForView rent = rentRepository.save(getRentFromUser());
-                System.out.println("ADDED RENT");
-                System.out.println(rent);
-                break;
-            case "9":
-                List<RentForView> rents = rentRepository.findAll();
-                System.out.println("ALL RENTS");
-                rents.forEach(System.out::println);
-                break;
-            default:
-                System.out.println("Invalid command!");
-                break;
+            if(menu.containsKey(command)) {
+                menu.get(command).getAction().run();
+            } else {
+                System.out.println("Invalid command");
+            }
         }
     }
 
     private void showMenu() {
-        menu.entrySet().forEach(entry -> System.out.println("\t" + entry.getKey() + "\t" + entry.getValue()));
+        menu.forEach((key, value) -> System.out.println("\t" + key + "\t" + value));
     }
 
-    private void init() {
-        reader = new Reader(new Scanner(System.in));
-        initRepositories();
-        initMenu();
+    private void createPublisher() {
+        Publisher publisher = publisherRepository.save(getPublisherFromUser());
+        System.out.println("ADDED PUBLISHER");
+        System.out.println(publisher);
+    }
+
+    private void printAllPublisher() {
+        List<Publisher> publishers = publisherRepository.findAll();
+        System.out.println("ALL PUBLISHER");
+        publishers.forEach(System.out::println);
+    }
+
+    private void createBook() {
+        BookForView book = bookRepository.save(getBookFromUser());
+        System.out.println("ADDED BOOK");
+        System.out.println(book);
+    }
+
+    private void printAllBook() {
+        List<BookForView> books = bookRepository.findAll();
+        System.out.println("ALL BOOKS");
+        books.forEach(System.out::println);
+    }
+
+    private void printBookByPublisher() {
+        int publisherId = reader.getInt("Publisher id: ", "Can not parse integer");
+        List<String> titles = bookRepository.findBookTitlesByPublisherId(publisherId);
+        System.out.println("TITLE OF BOOKS OF PUBLISHER WITH ID: " + publisherId);
+        titles.forEach(System.out::println);
+    }
+
+    private void createMembershipCard() {
+        MembershipCard card = membershipCardRepository.save(getCardFromUser());
+        System.out.println("ADDED MEMBERSHIP CARD");
+        System.out.println(card);
+    }
+
+    private void printAllMembershipCard() {
+        List<MembershipCard> cards = membershipCardRepository.findAll();
+        System.out.println("ALL MEMBERSHIP CARD");
+        cards.forEach(System.out::println);
+    }
+
+    private void createRent() {
+        RentForView rent = rentRepository.save(getRentFromUser());
+        System.out.println("ADDED RENT");
+        System.out.println(rent);
+    }
+
+    private void printAllRent() {
+        List<RentForView> rents = rentRepository.findAll();
+        System.out.println("ALL RENTS");
+        rents.forEach(System.out::println);
     }
 
     private void exit() {
@@ -143,16 +139,25 @@ public class LibraryController {
         return rent;
     }
 
+    private void init() {
+        reader = new Reader(new Scanner(System.in));
+        initRepositories();
+        initMenu();
+    }
+
     private void initMenu() {
         menu = new TreeMap<>();
-        menu.put("0", "Exit");
-        menu.put("1", "Create publisher");
-        menu.put("2", "Print all publisher");
-        menu.put("3", "Create book");
-        menu.put("4", "Print all book");
-        menu.put("5", "Print title of book of publisher");
-        menu.put("6", "Create membership card");
-        menu.put("7", "Print all membership card");
+        menu.put("0", new MenuItem("Exit", this::exit));
+        menu.put("1", new MenuItem("Create publisher", this::createPublisher));
+        menu.put("2", new MenuItem("Print all publisher", this::printAllPublisher));
+        menu.put("3", new MenuItem("Create book", this::createBook));
+        menu.put("4", new MenuItem("Print all book", this::printAllBook));
+        menu.put("5", new MenuItem("Print title of book of publisher", this::printBookByPublisher));
+        menu.put("6", new MenuItem("Create membership card", this::createMembershipCard));
+        menu.put("7", new MenuItem("Print all membership card", this::printAllMembershipCard));
+        menu.put("8", new MenuItem("Create rent", this::createRent));
+        menu.put("9", new MenuItem("Print all rent", this::printAllRent));
+        new MenuItem("Exit", this::exit);
     }
 
     private void initRepositories() {
