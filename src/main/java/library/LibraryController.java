@@ -13,11 +13,11 @@ import library.repository.BookRepository;
 import library.repository.MembershipCardRepository;
 import library.repository.PublisherRepository;
 import library.repository.RentRepository;
+import library.repository.jdbcTemplate.BookRepositoryWithJDBCTemplate;
+import library.userInterface.MenuItem;
+import library.userInterface.Reader;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
+import java.util.*;
 
 public class LibraryController {
 
@@ -48,7 +48,7 @@ public class LibraryController {
     }
 
     private void showMenu() {
-        menu.forEach((key, value) -> System.out.println("\t" + key + "\t" + value));
+        menu.forEach((key, value) -> System.out.println("\t" + key + "\t" + value.getText()));
     }
 
     private void createPublisher() {
@@ -146,7 +146,19 @@ public class LibraryController {
     }
 
     private void initMenu() {
-        menu = new TreeMap<>();
+        Comparator<String> menuComp = (o1, o2) -> {
+            if("0".equals(o1) && "0".equals(o1)) {
+                return 0;
+            }
+            if("0".equals(o1)) {
+                return -1;
+            }
+            if("0".equals(o2)) {
+                return -1;
+            }
+            return o1.compareTo(o2);
+        };
+        menu = new TreeMap<String, MenuItem>(menuComp);
         menu.put("0", new MenuItem("Exit", this::exit));
         menu.put("1", new MenuItem("Create publisher", this::createPublisher));
         menu.put("2", new MenuItem("Print all publisher", this::printAllPublisher));
@@ -166,7 +178,8 @@ public class LibraryController {
         dataSource.setUser("root");
         dataSource.setPassword("test1234");
 
-        bookRepository = new BookRepository(dataSource);
+        bookRepository = new BookRepositoryWithJDBCTemplate(dataSource);
+//        bookRepository = new BookRepository(dataSource);
         publisherRepository = new PublisherRepository(dataSource);
         membershipCardRepository = new MembershipCardRepository(dataSource);
         rentRepository = new RentRepository(dataSource);

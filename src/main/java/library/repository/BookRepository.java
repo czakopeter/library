@@ -91,7 +91,7 @@ public class BookRepository {
         }
     }
 
-    private BookForView convertToBookForView(ResultSet rs) throws SQLException {
+    protected BookForView convertToBookForView(ResultSet rs) throws SQLException {
         BookForView book = new BookForView();
         book.setPublisherName(rs.getString("name"));
         book.setTitle(rs.getString("title"));

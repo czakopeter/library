@@ -1,4 +1,4 @@
-package library;
+package library.userInterface;
 
 import lombok.Getter;
 import lombok.Setter;
