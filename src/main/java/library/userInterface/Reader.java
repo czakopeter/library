@@ -1,5 +1,6 @@
 package library.userInterface;
 
+import java.io.InputStream;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Scanner;
@@ -7,8 +8,8 @@ import java.util.Scanner;
 public class Reader {
     Scanner sc;
 
-    public Reader(Scanner sc) {
-        this.sc = sc;
+    public Reader(InputStream is) {
+        this.sc = new Scanner(is);
     }
 
     public String getString(String question) {

@@ -16,18 +16,18 @@ import library.repository.RentRepository;
 import library.repository.jdbcTemplate.BookRepositoryWithJDBCTemplate;
 import library.userInterface.MenuItem;
 import library.userInterface.Reader;
+import library.userInterface.UserInterface;
 
 import java.util.*;
 
 public class LibraryController {
 
-    private boolean run = true;
-    private Reader reader;
     private PublisherRepository publisherRepository;
     private BookRepository bookRepository;
     private MembershipCardRepository membershipCardRepository;
     private RentRepository rentRepository;
-    private Map<String, MenuItem> menu;
+    private UserInterface userInterface;
+    private Reader reader;
 
     public static void main(String[] args) {
         new LibraryController().run();
@@ -35,20 +35,7 @@ public class LibraryController {
 
     private void run() {
         init();
-
-        while (run) {
-            showMenu();
-            String command = reader.getString("Command: ");
-            if(menu.containsKey(command)) {
-                menu.get(command).getAction().run();
-            } else {
-                System.out.println("Invalid command");
-            }
-        }
-    }
-
-    private void showMenu() {
-        menu.forEach((key, value) -> System.out.println("\t" + key + "\t" + value.getText()));
+        userInterface.run();
     }
 
     private void createPublisher() {
@@ -76,9 +63,8 @@ public class LibraryController {
     }
 
     private void printBookByPublisher() {
-        int publisherId = reader.getInt("Publisher id: ", "Can not parse integer");
-        List<String> titles = bookRepository.findBookTitlesByPublisherId(publisherId);
-        System.out.println("TITLE OF BOOKS OF PUBLISHER WITH ID: " + publisherId);
+        List<String> titles = bookRepository.findBookTitlesByPublisherId(reader.getInt("Publisher id: ", "Can not parse integer"));
+        System.out.println("TITLE OF BOOKS");
         titles.forEach(System.out::println);
     }
 
@@ -107,7 +93,7 @@ public class LibraryController {
     }
 
     private void exit() {
-        run = false;
+        userInterface.close();
     }
 
     private PublisherForSave getPublisherFromUser() {
@@ -140,25 +126,17 @@ public class LibraryController {
     }
 
     private void init() {
-        reader = new Reader(new Scanner(System.in));
         initRepositories();
-        initMenu();
+        initUserInterface();
+        reader = new Reader(System.in);
     }
 
-    private void initMenu() {
-        Comparator<String> menuComp = (o1, o2) -> {
-            if("0".equals(o1) && "0".equals(o1)) {
-                return 0;
-            }
-            if("0".equals(o1)) {
-                return -1;
-            }
-            if("0".equals(o2)) {
-                return -1;
-            }
-            return o1.compareTo(o2);
-        };
-        menu = new TreeMap<String, MenuItem>(menuComp);
+    private void initUserInterface() {
+        userInterface = new UserInterface(initMenu());
+    }
+
+    private Map<String, MenuItem> initMenu() {
+        Map<String, MenuItem> menu = new TreeMap<>();
         menu.put("0", new MenuItem("Exit", this::exit));
         menu.put("1", new MenuItem("Create publisher", this::createPublisher));
         menu.put("2", new MenuItem("Print all publisher", this::printAllPublisher));
@@ -169,7 +147,7 @@ public class LibraryController {
         menu.put("7", new MenuItem("Print all membership card", this::printAllMembershipCard));
         menu.put("8", new MenuItem("Create rent", this::createRent));
         menu.put("9", new MenuItem("Print all rent", this::printAllRent));
-        new MenuItem("Exit", this::exit);
+        return menu;
     }
 
     private void initRepositories() {

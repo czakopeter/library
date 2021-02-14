@@ -1,7 +1,5 @@
 package library.repository;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
-import library.domain.pojo.Publisher;
 import library.domain.save.BookForSave;
 import library.domain.view.BookForView;
 
@@ -15,7 +13,7 @@ import java.util.List;
 
 public class BookRepository {
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public BookRepository(DataSource dataSource) {
         this.dataSource = dataSource;

@@ -1,12 +1,11 @@
 package library.userInterface;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public class MenuItem {
 
-    private @Getter @Setter String text;
-    private @Getter @Setter Run action;
+    private final @Getter String text;
+    private final @Getter Run action;
 
     public MenuItem(String text, Run action) {
         this.text = text;
