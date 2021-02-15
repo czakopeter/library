@@ -1,6 +1,5 @@
 package library.repository;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
 import library.domain.pojo.MembershipCard;
 import library.domain.save.MembershipCarForSave;
 

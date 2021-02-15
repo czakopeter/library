@@ -161,10 +161,5 @@ public class LibraryController {
         publisherRepository = new PublisherRepositoryWithJDBCTemplate(dataSource);
         membershipCardRepository = new MembershipCardRepositoryWithJDBCTemplate(dataSource);
         rentRepository = new RentRepositoryWithJDBCTemplate(dataSource);
-
-//        bookRepository = new BookRepository(dataSource);
-//        publisherRepository = new PublisherRepository(dataSource);
-//        membershipCardRepository = new MembershipCardRepository(dataSource);
-//        rentRepository = new RentRepository(dataSource);
     }
 }

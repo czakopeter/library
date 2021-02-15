@@ -4,15 +4,13 @@ import library.domain.pojo.Publisher;
 import library.domain.save.PublisherForSave;
 import library.repository.PublisherRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 public class PublisherRepositoryWithJDBCTemplate extends PublisherRepository {
 
@@ -36,7 +34,7 @@ public class PublisherRepositoryWithJDBCTemplate extends PublisherRepository {
             return stmt;
         }, keyHolder);
 
-        return findById(keyHolder.getKey().shortValue());
+        return findById(Objects.requireNonNull(keyHolder.getKey()).shortValue());
     }
 
     @Override

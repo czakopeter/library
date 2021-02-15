@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 public class MembershipCardRepositoryWithJDBCTemplate extends MembershipCardRepository {
 
@@ -34,7 +35,7 @@ public class MembershipCardRepositoryWithJDBCTemplate extends MembershipCardRepo
         });
 
         MembershipCard view = new MembershipCard();
-        view.setId(keyHolder.getKey().intValue());
+        view.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
         view.setName(card.getName());
         view.setBirthdate(card.getBirthdate());
         return view;

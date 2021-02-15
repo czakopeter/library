@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 public class BookRepositoryWithJDBCTemplate extends BookRepository {
 
@@ -31,7 +32,7 @@ public class BookRepositoryWithJDBCTemplate extends BookRepository {
             stmt.setString(2, book.getTitle());
             return stmt;
         }, keyHolder);
-        return findById(keyHolder.getKey().intValue());
+        return findById(Objects.requireNonNull(keyHolder.getKey()).intValue());
     }
 
     @Override

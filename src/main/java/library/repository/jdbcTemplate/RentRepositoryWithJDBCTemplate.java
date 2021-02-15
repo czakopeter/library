@@ -8,10 +8,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
-import java.security.Key;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 public class RentRepositoryWithJDBCTemplate extends RentRepository {
 
@@ -35,7 +35,7 @@ public class RentRepositoryWithJDBCTemplate extends RentRepository {
             return stmt;
         });
 
-        return findById(keyHolder.getKey().intValue());
+        return findById(Objects.requireNonNull(keyHolder.getKey()).intValue());
     }
 
     @Override

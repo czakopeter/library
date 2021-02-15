@@ -1,6 +1,5 @@
 package library.repository;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
 import library.domain.pojo.Publisher;
 import library.domain.save.PublisherForSave;
 
@@ -14,7 +13,7 @@ import java.util.List;
 
 public class PublisherRepository {
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public PublisherRepository(DataSource dataSource) {
         this.dataSource = dataSource;
