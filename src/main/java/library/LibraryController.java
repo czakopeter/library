@@ -14,8 +14,10 @@ import library.repository.MembershipCardRepository;
 import library.repository.PublisherRepository;
 import library.repository.RentRepository;
 import library.repository.jdbcTemplate.BookRepositoryWithJDBCTemplate;
+import library.repository.jdbcTemplate.MembershipCardRepositoryWithJDBCTemplate;
+import library.repository.jdbcTemplate.PublisherRepositoryWithJDBCTemplate;
+import library.repository.jdbcTemplate.RentRepositoryWithJDBCTemplate;
 import library.userInterface.MenuItem;
-import library.userInterface.Reader;
 import library.userInterface.UserInterface;
 
 import java.util.*;
@@ -27,7 +29,6 @@ public class LibraryController {
     private MembershipCardRepository membershipCardRepository;
     private RentRepository rentRepository;
     private UserInterface userInterface;
-    private Reader reader;
 
     public static void main(String[] args) {
         new LibraryController().run();
@@ -63,7 +64,8 @@ public class LibraryController {
     }
 
     private void printBookByPublisher() {
-        List<String> titles = bookRepository.findBookTitlesByPublisherId(reader.getInt("Publisher id: ", "Can not parse integer"));
+        List<String> titles = bookRepository.findBookTitlesByPublisherId(
+                userInterface.getInt("Publisher id: ", "Can not parse integer"));
         System.out.println("TITLE OF BOOKS");
         titles.forEach(System.out::println);
     }
@@ -98,37 +100,36 @@ public class LibraryController {
 
     private PublisherForSave getPublisherFromUser() {
         PublisherForSave publisher = new PublisherForSave();
-        publisher.setName(reader.getString("Publisher name: "));
-        publisher.setCity(reader.getString("Publisher city: "));
+        publisher.setName(userInterface.getString("Publisher name: "));
+        publisher.setCity(userInterface.getString("Publisher city: "));
         return publisher;
     }
 
     private BookForSave getBookFromUser() {
         BookForSave book = new BookForSave();
-        book.setPublisherId(reader.getInt("Publisher id: ", "Can not parse integer"));
-        book.setTitle(reader.getString("Book title: "));
+        book.setPublisherId(userInterface.getInt("Publisher id: ", "Can not parse integer"));
+        book.setTitle(userInterface.getString("Book title: "));
         return book;
     }
 
     private MembershipCarForSave getCardFromUser() {
         MembershipCarForSave membershipCard = new MembershipCarForSave();
-        membershipCard.setName(reader.getString("Name: "));
-        membershipCard.setBirthdate(reader.getDate("Birthdate: "));
+        membershipCard.setName(userInterface.getString("Name: "));
+        membershipCard.setBirthdate(userInterface.getDate("Birthdate: "));
         return membershipCard;
     }
 
     private RentForSave getRentFromUser() {
         RentForSave rent = new RentForSave();
-        rent.setBookId(reader.getInt("Book id: ", "Can not parse integer"));
-        rent.setMembershipCardId(reader.getInt("Membership card id: ", "Can not parse integer"));
-        rent.setRentDate(reader.getDate("Rent date: "));
+        rent.setBookId(userInterface.getInt("Book id: ", "Can not parse integer"));
+        rent.setMembershipCardId(userInterface.getInt("Membership card id: ", "Can not parse integer"));
+        rent.setRentDate(userInterface.getDate("Rent date: "));
         return rent;
     }
 
     private void init() {
         initRepositories();
         initUserInterface();
-        reader = new Reader(System.in);
     }
 
     private void initUserInterface() {
@@ -157,9 +158,13 @@ public class LibraryController {
         dataSource.setPassword("test1234");
 
         bookRepository = new BookRepositoryWithJDBCTemplate(dataSource);
+        publisherRepository = new PublisherRepositoryWithJDBCTemplate(dataSource);
+        membershipCardRepository = new MembershipCardRepositoryWithJDBCTemplate(dataSource);
+        rentRepository = new RentRepositoryWithJDBCTemplate(dataSource);
+
 //        bookRepository = new BookRepository(dataSource);
-        publisherRepository = new PublisherRepository(dataSource);
-        membershipCardRepository = new MembershipCardRepository(dataSource);
-        rentRepository = new RentRepository(dataSource);
+//        publisherRepository = new PublisherRepository(dataSource);
+//        membershipCardRepository = new MembershipCardRepository(dataSource);
+//        rentRepository = new RentRepository(dataSource);
     }
 }

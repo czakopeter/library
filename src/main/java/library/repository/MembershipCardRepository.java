@@ -55,7 +55,7 @@ public class MembershipCardRepository {
         return cards;
     }
 
-    private MembershipCard convertToMembershipCardForView(ResultSet rs) throws SQLException {
+    protected MembershipCard convertToMembershipCardForView(ResultSet rs) throws SQLException {
         MembershipCard card = new MembershipCard();
         card.setId(rs.getInt("id"));
         card.setName(rs.getString("name"));

@@ -1,5 +1,11 @@
 package library.userInterface;
 
+import library.domain.save.BookForSave;
+import library.domain.save.MembershipCarForSave;
+import library.domain.save.PublisherForSave;
+import library.domain.save.RentForSave;
+
+import java.time.LocalDate;
 import java.util.Map;
 
 public class UserInterface {
@@ -28,6 +34,18 @@ public class UserInterface {
 
     public void close() {
         run = false;
+    }
+
+    public String getString(String question) {
+        return reader.getString(question);
+    }
+
+    public int getInt(String question, String invalid) {
+        return reader.getInt(question, invalid);
+    }
+
+    public LocalDate getDate(String question) {
+        return reader.getDate(question);
     }
 
     private void showMenu() {

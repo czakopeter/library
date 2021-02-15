@@ -71,7 +71,7 @@ public class RentRepository {
         return rents;
     }
 
-    private RentForView convertToRentForView(ResultSet rs) throws SQLException {
+    public RentForView convertToRentForView(ResultSet rs) throws SQLException {
         RentForView rent = new RentForView();
         rent.setId(rs.getInt("id"));
         rent.setBookId(rs.getInt("book_id"));

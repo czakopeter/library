@@ -58,7 +58,7 @@ public class PublisherRepository {
         return publishers;
     }
 
-    private Publisher convertToPublisherForView(ResultSet rs) throws SQLException {
+    protected Publisher convertToPublisherForView(ResultSet rs) throws SQLException {
         Publisher publisher = new Publisher();
         publisher.setId(rs.getInt("id"));
         publisher.setName(rs.getString("name"));

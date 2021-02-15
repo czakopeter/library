@@ -36,13 +36,13 @@ public class BookRepositoryWithJDBCTemplate extends BookRepository {
 
     @Override
     public List<BookForView> findAll() {
-        String findAll = "SELECT * FROM book;";
+        String findAll = "SELECT p.name AS name, b.title AS title FROM book b JOIN publisher p ON b.publisher_id = p.id;";
         return jdbcTemplate.query(findAll, (rs, rowNum) -> convertToBookForView(rs));
     }
 
     @Override
     public List<String> findBookTitlesByPublisherId(int id) {
-        String findTitlesOfBookByPublisherId = "SELECT title FROM book WHERE publisher_id=?";
+        String findTitlesOfBookByPublisherId = "SELECT DISTINCT title FROM book WHERE publisher_id=?";
         return jdbcTemplate.query(
                 findTitlesOfBookByPublisherId,
                 new Object[]{id},
@@ -51,7 +51,7 @@ public class BookRepositoryWithJDBCTemplate extends BookRepository {
     }
 
     private BookForView findById(int id) {
-        String findById = "select * from book where id=?;";
+        String findById = "SELECT p.name AS name, b.title AS title FROM (SELECT * FROM book WHERE id=?)AS b JOIN publisher p ON b.publisher_id = p.id;";
         return jdbcTemplate.queryForObject(
                 findById,
                 new Object[]{id},
